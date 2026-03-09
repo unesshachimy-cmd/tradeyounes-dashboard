@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — TradeYounes AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--gold:#C9A84C;--gold-light:#E8C96A;--bg:#080808;--bg2:#0D0D0D;--border:rgba(255,255,255,0.07);--text:#F0EBE0;--text2:#6B6560;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+/* Grid bg */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;}
+
+/* Glow */
+.glow{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,0.07) 0%,transparent 70%);pointer-events:none;animation:breathe 4s ease-in-out infinite;}
+@keyframes breathe{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}}
+
+/* Particles */
+.particle{position:fixed;border-radius:50%;pointer-events:none;animation:float linear infinite;}
+@keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-100px) rotate(720deg);opacity:0;}}
+
+.wrap{position:relative;z-index:10;text-align:center;padding:30px 20px;max-width:540px;width:100%;}
+
+/* Logo */
+.logo{display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:52px;}
+.logo-svg{width:40px;height:40px;}
+.logo-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;}
+.logo-name span{color:var(--gold);}
+
+/* 404 */
+.code{position:relative;margin-bottom:6px;}
+.code-num{font-family:'Playfair Display',serif;font-size:clamp(110px,22vw,160px);font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold-light),var(--gold),rgba(201,168,76,0.3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;}
+.code-num::after{content:'404';position:absolute;top:8px;left:50%;transform:translateX(-50%);font-family:'Playfair Display',serif;font-size:clamp(110px,22vw,160px);font-weight:900;line-height:1;background:none;-webkit-text-fill-color:transparent;-webkit-text-stroke:1px rgba(201,168,76,0.1);}
+
+/* Chart decoration inside 404 */
+.chart-icon{font-size:38px;margin-bottom:6px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+
+.title{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,26px);font-weight:700;margin-bottom:12px;color:var(--text);}
+.sub{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:36px;max-width:380px;margin-left:auto;margin-right:auto;}
+
+/* Buttons */
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:44px;}
+.btn-main{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#8B6914,var(--gold));color:#000;font-size:13px;font-weight:700;padding:13px 28px;border-radius:10px;cursor:pointer;border:none;transition:all 0.3s;text-decoration:none;letter-spacing:0.04em;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,0.4);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text2);font-size:13px;font-weight:600;padding:13px 24px;border-radius:10px;cursor:pointer;border:1px solid var(--border);transition:all 0.3s;text-decoration:none;}
+.btn-ghost:hover{border-color:rgba(201,168,76,0.4);color:var(--gold);transform:translateY(-2px);}
+
+/* Quick links */
+.quick{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.quick-link{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--border);font-size:11px;color:var(--text2);text-decoration:none;transition:all 0.2s;background:rgba(255,255,255,0.02);}
+.quick-link:hover{border-color:rgba(201,168,76,0.35);color:var(--gold);background:rgba(201,168,76,0.04);}
+
+/* Divider */
+.divider{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:32px auto;}
+
+/* Ticker */
+.ticker-text{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(201,168,76,0.3);letter-spacing:0.15em;overflow:hidden;white-space:nowrap;}
+.ticker-inner{display:inline-block;animation:scroll 20s linear infinite;}
+@keyframes scroll{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<!-- Floating particles -->
+<script>
+for(let i=0;i<12;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const s=Math.random()*4+2;
+  p.style.cssText=`width:${s}px;height:${s}px;background:rgba(201,168,76,${Math.random()*0.3+0.1});left:${Math.random()*100}%;animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s;`;
+  document.body.appendChild(p);
+}
+</script>
+
+<div class="wrap">
+
+  <!-- Logo -->
+  <div class="logo">
+    <svg class="logo-svg" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="10" fill="url(#lg404)"/>
+      <rect x="7" y="23" width="5" height="10" rx="1" fill="#C9A84C"/>
+      <rect x="15" y="18" width="5" height="15" rx="1" fill="#E8C96A"/>
+      <rect x="23" y="13" width="5" height="20" rx="1" fill="#C9A84C"/>
+      <polyline points="6,19 11,12 16,15 21,8 26,11 33,7" stroke="#E8C96A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="11" cy="12" r="1.5" fill="#E8C96A"/>
+      <circle cx="21" cy="8" r="1.5" fill="#E8C96A"/>
+      <circle cx="33" cy="7" r="1.5" fill="#E8C96A"/>
+      <defs><linearGradient id="lg404" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#1A1400"/><stop offset="100%" stop-color="#0A0800"/></linearGradient></defs>
+    </svg>
+    <div class="logo-name">Trade<span>Younes</span> AI</div>
+  </div>
+
+  <!-- 404 -->
+  <div class="code">
+    <div class="code-num">404</div>
+  </div>
+
+  <div class="chart-icon">📉</div>
+
+  <h1 class="title">This zone doesn't exist</h1>
+  <p class="sub">The page you're looking for has either moved or never existed — just like a fake supply zone. Let's get you back on track.</p>
+
+  <div class="btns">
+    <a href="https://tradeyounes.com" class="btn-main">🏠 Back to Home</a>
+    <a href="https://dashboard.tradeyounes.com" class="btn-ghost">📊 Signal Hub</a>
+  </div>
+
+  <div class="quick">
+    <a href="https://tradeyounes.com/#pricing" class="quick-link">💳 Pricing</a>
+    <a href="https://t.me/tradeyounesai" class="quick-link" target="_blank">📱 Telegram</a>
+    <a href="mailto:support@tradeyounes.com" class="quick-link">✉️ Support</a>
+    <a href="https://tradeyounes.com/#faq" class="quick-link">❓ FAQ</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ticker-text">
+    <span class="ticker-inner">XAUUSD &nbsp;·&nbsp; EURUSD &nbsp;·&nbsp; GBPUSD &nbsp;·&nbsp; XAGUSD &nbsp;·&nbsp; USDJPY &nbsp;·&nbsp; GBPJPY &nbsp;·&nbsp; EURJPY &nbsp;·&nbsp; AUDUSD &nbsp;·&nbsp; 8+/10 SIGNALS ONLY &nbsp;·&nbsp; SAM SEIDEN METHODOLOGY &nbsp;·&nbsp;&nbsp;</span>
+  </div>
+
+</div>
+</body>
+</html>
