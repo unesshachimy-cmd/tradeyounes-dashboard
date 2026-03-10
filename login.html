@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeYounes AI — Access Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:   #C9A84C;
+    --gold2:  #E8C96A;
+    --gold3:  #F5DFA0;
+    --bg:     #080808;
+    --bg2:    #0e0e0e;
+    --bg3:    #141414;
+    --border: rgba(201,168,76,0.18);
+    --text:   #F0EBE0;
+    --text2:  #8A8070;
+    --text3:  #4A4035;
+    --red:    #E05252;
+    --green:  #52C07A;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── Background ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .bg-radial {
+    position: absolute;
+    top: -30%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 700px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 70%);
+  }
+  .bg-line {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.2;
+  }
+  .ticker-dot {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: ticker-float 8s ease-in-out infinite;
+  }
+  .ticker-dot:nth-child(1) { width:3px; height:3px; background:var(--gold); top:20%; left:15%; animation-delay:0s; }
+  .ticker-dot:nth-child(2) { width:2px; height:2px; background:var(--gold2); top:60%; left:80%; animation-delay:2s; }
+  .ticker-dot:nth-child(3) { width:2px; height:2px; background:var(--gold); top:40%; left:5%; animation-delay:4s; }
+  .ticker-dot:nth-child(4) { width:3px; height:3px; background:var(--gold3); top:75%; left:45%; animation-delay:1s; }
+  .ticker-dot:nth-child(5) { width:2px; height:2px; background:var(--gold2); top:10%; left:70%; animation-delay:3s; }
+
+  @keyframes ticker-float {
+    0%, 100% { opacity:0; transform: translateY(0px); }
+    20%, 80% { opacity: 0.6; }
+    50% { transform: translateY(-20px); opacity: 0.8; }
+  }
+
+  /* ── Layout ── */
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  /* ── Header ── */
+  .brand {
+    text-align: center;
+    margin-bottom: 44px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .brand-logo {
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .brand-logo img {
+    width: 160px;
+    height: auto;
+  }
+  .brand-sub {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* ── Card ── */
+  .card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.5;
+  }
+  .card-shine {
+    position: absolute; top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* ── Input Group ── */
+  .input-group { margin-bottom: 20px; }
+  .input-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .input-wrap {
+    position: relative;
+  }
+  .input-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text3);
+    transition: color 0.2s;
+    pointer-events: none;
+  }
+  .license-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 10px;
+    padding: 14px 14px 14px 42px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    caret-color: var(--gold2);
+    text-transform: uppercase;
+  }
+  .license-input::placeholder {
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+  }
+  .license-input:focus {
+    border-color: rgba(201,168,76,0.45);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+  }
+  .license-input:focus ~ .input-icon,
+  .input-wrap:focus-within .input-icon {
+    color: var(--gold);
+  }
+
+  /* ── Error / Success ── */
+  .status-msg {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    animation: fadeUp 0.3s ease both;
+  }
+  .status-msg.show { display: flex; }
+  .status-msg.error {
+    background: rgba(224,82,82,0.08);
+    border: 1px solid rgba(224,82,82,0.2);
+    color: #F08080;
+  }
+  .status-msg.success {
+    background: rgba(82,192,122,0.08);
+    border: 1px solid rgba(82,192,122,0.2);
+    color: #80D4A0;
+  }
+  .status-msg.loading {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--gold2);
+  }
+
+  /* ── Button ── */
+  .btn-access {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold) 0%, #A87B2A 100%);
+    color: #0a0800;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 15px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-access::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-access:hover:not(:disabled)::after { opacity: 1; }
+  .btn-access:hover:not(:disabled) { transform: translateY(-1px); }
+  .btn-access:active:not(:disabled) { transform: translateY(0); }
+  .btn-access:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-inner {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    position: relative; z-index: 1;
+  }
+
+  /* Spinner */
+  .spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: #0a0800;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  .spinner.show { display: block; }
+  .btn-text-default { transition: opacity 0.2s; }
+  .btn-text-loading { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Plan Badge (shown after valid) ── */
+  .plan-info {
+    display: none;
+    margin-bottom: 20px;
+  }
+  .plan-info.show { display: block; animation: fadeUp 0.3s ease both; }
+  .plan-badge {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .plan-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(82,192,122,0.6);
+    flex-shrink: 0;
+  }
+  .plan-detail { flex: 1; }
+  .plan-name {
+    font-size: 13px; font-weight: 600; color: var(--gold2);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .plan-expires { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* ── Divider ── */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 24px 0;
+    color: var(--text3);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* ── Footer Links ── */
+  .card-footer {
+    text-align: center;
+    margin-top: 24px;
+  }
+  .card-footer p { font-size: 13px; color: var(--text2); margin-bottom: 4px; }
+  .card-footer a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .card-footer a:hover { color: var(--gold2); }
+
+  /* ── Bottom note ── */
+  .page-footer {
+    margin-top: 32px;
+    text-align: center;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+  .page-footer p {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
+  .page-footer a { color: var(--text3); text-decoration: none; border-bottom: 1px solid rgba(74,64,53,0.4); }
+  .page-footer a:hover { color: var(--text2); }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Redirect overlay ── */
+  .redirect-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--bg);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .redirect-overlay.show {
+    display: flex;
+    animation: fadeIn 0.4s ease both;
+  }
+  .redirect-ring {
+    width: 56px; height: 56px;
+    border: 2px solid rgba(201,168,76,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  .redirect-text {
+    font-size: 14px;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 480px) {
+    .card { padding: 32px 24px; border-radius: 16px; }
+    .card-title { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-layer">
+  <div class="bg-grid"></div>
+  <div class="bg-radial"></div>
+  <div class="bg-line"></div>
+  <div class="ticker-dot"></div>
+  <div class="ticker-dot"></div>
+  <div class="ticker-dot"></div>
+  <div class="ticker-dot"></div>
+  <div class="ticker-dot"></div>
+</div>
+
+<!-- Redirect overlay -->
+<div class="redirect-overlay" id="redirectOverlay">
+  <div class="redirect-ring"></div>
+  <p class="redirect-text">Accessing Signal Hub…</p>
+</div>
+
+<!-- Main -->
+<div class="page">
+
+  <!-- Brand -->
+  <div class="brand">
+    <div class="brand-logo">
+      <img src="./logo.png" alt="TradeYounes AI" />
+    </div>
+    <p class="brand-sub">Institutional Supply &amp; Demand Signals</p>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+    <div class="card-shine"></div>
+
+    <h1 class="card-title">Access Signal Hub</h1>
+    <p class="card-desc">Enter your license key to access real-time trading signals and analytics.</p>
+
+    <!-- Status messages -->
+    <div class="status-msg loading" id="msgLoading">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Validating license key…</span>
+    </div>
+
+    <div class="status-msg error" id="msgError">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span id="msgErrorText">Invalid license key. Please check and try again.</span>
+    </div>
+
+    <div class="status-msg success" id="msgSuccess">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+        <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>License valid! Redirecting to Signal Hub…</span>
+    </div>
+
+    <!-- Plan info (shown after valid) -->
+    <div class="plan-info" id="planInfo">
+      <div class="plan-badge">
+        <div class="plan-dot"></div>
+        <div class="plan-detail">
+          <div class="plan-name" id="planName">—</div>
+          <div class="plan-expires" id="planExpires">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-group">
+      <label class="input-label" for="licenseInput">License Key</label>
+      <div class="input-wrap">
+        <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
+        </svg>
+        <input
+          type="text"
+          id="licenseInput"
+          class="license-input"
+          placeholder="TY-XXXX-XXXX-XXXX"
+          maxlength="17"
+          autocomplete="off"
+          spellcheck="false"
+          autocapitalize="characters"
+        />
+      </div>
+    </div>
+
+    <!-- Button -->
+    <button class="btn-access" id="btnAccess" onclick="handleAccess()">
+      <span class="btn-inner">
+        <div class="spinner" id="spinner"></div>
+        <span class="btn-text-default" id="btnTextDefault">Access Dashboard</span>
+        <span class="btn-text-loading" id="btnTextLoading">Verifying…</span>
+      </span>
+    </button>
+
+    <div class="divider">or</div>
+
+    <div class="card-footer">
+      <p>Don't have a license?</p>
+      <a href="https://whop.com/tradeyounes-ai/" target="_blank">Get access from $2 →</a>
+    </div>
+  </div>
+
+  <!-- Page footer -->
+  <div class="page-footer">
+    <p>
+      Having trouble? <a href="/cdn-cgi/l/email-protection#62111712120d10162216100306071b0d170c07114c010d0f"><span class="__cf_email__" data-cfemail="4e3d3b3e3e213c3a0e3a3c2f2a2b37213b202b3d602d2123">[email&#160;protected]</span></a>
+      &nbsp;·&nbsp;
+      <a href="https://t.me/tradeyounesai" target="_blank">Telegram</a>
+    </p>
+    <p style="margin-top:6px">For educational purposes only · Not financial advice</p>
+  </div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const API_BASE = 'https://web-production-80604.up.railway.app';
+  const DASHBOARD_URL = 'https://dashboard.tradeyounes.com';
+
+  const input    = document.getElementById('licenseInput');
+  const btn      = document.getElementById('btnAccess');
+  const spinner  = document.getElementById('spinner');
+  const txtDef   = document.getElementById('btnTextDefault');
+  const txtLoad  = document.getElementById('btnTextLoading');
+  const msgLoad  = document.getElementById('msgLoading');
+  const msgErr   = document.getElementById('msgError');
+  const msgErrTxt= document.getElementById('msgErrorText');
+  const msgOk    = document.getElementById('msgSuccess');
+  const planInfo = document.getElementById('planInfo');
+  const planName = document.getElementById('planName');
+  const planExp  = document.getElementById('planExpires');
+  const overlay  = document.getElementById('redirectOverlay');
+
+  // Auto-format: TY-XXXX-XXXX-XXXX
+  input.addEventListener('input', (e) => {
+    let val = e.target.value.replace(/[^A-Z0-9-]/gi, '').toUpperCase();
+    // Remove dashes to re-format
+    let clean = val.replace(/-/g, '');
+    // Keep "TY" prefix structure
+    let formatted = '';
+    if (clean.startsWith('TY')) {
+      formatted = 'TY';
+      clean = clean.slice(2);
+      const chunks = clean.match(/.{1,4}/g) || [];
+      if (chunks.length > 0) formatted += '-' + chunks.slice(0, 3).join('-');
+    } else {
+      formatted = val.slice(0, 17);
+    }
+    e.target.value = formatted.slice(0, 17);
+    clearMessages();
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleAccess();
+  });
+
+  function clearMessages() {
+    [msgLoad, msgErr, msgOk].forEach(el => el.classList.remove('show'));
+    planInfo.classList.remove('show');
+  }
+
+  function setLoading(on) {
+    btn.disabled = on;
+    input.disabled = on;
+    spinner.classList.toggle('show', on);
+    txtDef.style.display = on ? 'none' : '';
+    txtLoad.style.display = on ? '' : 'none';
+  }
+
+  function showError(msg) {
+    msgErrTxt.textContent = msg;
+    msgErr.classList.add('show');
+    input.focus();
+    // Shake animation
+    input.style.animation = 'none';
+    input.getBoundingClientRect();
+    input.style.animation = 'shake 0.3s ease';
+  }
+
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-6px)}
+      40%{transform:translateX(6px)}
+      60%{transform:translateX(-4px)}
+      80%{transform:translateX(4px)}
+    }
+  `;
+  document.head.appendChild(style);
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function formatPlan(plan) {
+    const names = {
+      trial:   'Trial — 24h Access',
+      starter: 'Starter Plan',
+      pro:     'Pro Plan',
+      elite:   'Elite Plan'
+    };
+    return names[plan] || plan.charAt(0).toUpperCase() + plan.slice(1);
+  }
+
+  async function handleAccess() {
+    const key = input.value.trim().toUpperCase();
+
+    if (!key || key.length < 14) {
+      showError('Please enter a valid license key (TY-XXXX-XXXX-XXXX).');
+      return;
+    }
+
+    clearMessages();
+    setLoading(true);
+    msgLoad.classList.add('show');
+
+    try {
+      const res = await fetch(`${API_BASE}/license/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ license_key: key })
+      });
+
+      const data = await res.json();
+      msgLoad.classList.remove('show');
+
+      if (!res.ok) {
+        setLoading(false);
+        const errMap = {
+          404: 'License key not found. Please check your key.',
+          403: data.detail || 'License is inactive or expired.',
+        };
+        showError(errMap[res.status] || `Error ${res.status}: ${data.detail || 'Please try again.'}`);
+        return;
+      }
+
+      // ✅ Valid
+      planName.textContent = formatPlan(data.plan);
+      planExp.textContent  = `Active until ${formatDate(data.expires)}`;
+      planInfo.classList.add('show');
+      msgOk.classList.add('show');
+
+      // Store session
+      sessionStorage.setItem('ty_license', key);
+      sessionStorage.setItem('ty_plan', data.plan);
+      sessionStorage.setItem('ty_expires', data.expires);
+
+      // Redirect
+      setTimeout(() => {
+        overlay.classList.add('show');
+        setTimeout(() => {
+          window.location.href = `${DASHBOARD_URL}?key=${encodeURIComponent(key)}&plan=${data.plan}`;
+        }, 800);
+      }, 1000);
+
+    } catch (err) {
+      setLoading(false);
+      msgLoad.classList.remove('show');
+      showError('Connection error. Please check your internet and try again.');
+      console.error(err);
+    }
+  }
+
+  // Check if already h
